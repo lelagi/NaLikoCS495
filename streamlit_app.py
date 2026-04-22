@@ -196,22 +196,6 @@ st.markdown(
         margin-bottom: 0.9rem;
     }}
 
-    /* Top Streamlit header */
-header[data-testid="stHeader"] {
-    background: #04162F !important;
-}
-
-/* Toolbar (top right icons like Share) */
-div[data-testid="stToolbar"] * {
-    color: #FFFFFF !important;
-    fill: #FFFFFF !important;
-}
-
-/* Reduce white gap */
-.block-container {
-    padding-top: 0.8rem !important;
-}
-
     </style>
     """,
     unsafe_allow_html=True
