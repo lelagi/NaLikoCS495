@@ -13,7 +13,6 @@ st.set_page_config(
 # ----------------------------
 PAGE_BG = "#061C3B"
 PANEL_BG = "rgba(21, 58, 105, 0.78)"
-PANEL_BORDER = "#2EB8FF"
 TEXT_MAIN = "#F4F8FF"
 TEXT_MUTED = "#B7CAE6"
 TITLE_COLOR = "#2EB8FF"
@@ -38,6 +37,23 @@ st.markdown(
 
     section[data-testid="stSidebar"] * {{
         color: {TEXT_MAIN} !important;
+    }}
+
+    .stSelectbox div[data-baseweb="select"] > div {{
+        background-color: #FFFFFF !important;
+        color: #0B254A !important;
+    }}
+
+    .stSelectbox div[data-baseweb="select"] span {{
+        color: #0B254A !important;
+    }}
+
+    .stSelectbox input {{
+        color: #0B254A !important;
+    }}
+
+    div[data-baseweb="popover"] * {{
+        color: #0B254A !important;
     }}
 
     .block-container {{
@@ -177,9 +193,7 @@ for col in numeric_cols:
     if col in df.columns:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-# Title I cleaning:
-# "Yes" = Title I
-# blank = Non-Title I
+# "Yes" = Title I, blank = Non-Title I
 df["Title I"] = df["Title I"].fillna("").astype(str).str.strip()
 df["Title I"] = df["Title I"].apply(lambda x: 1 if x.lower() == "yes" else 0)
 df["Title I Label"] = df["Title I"].map({1: "Title I", 0: "Non-Title I"})
@@ -325,9 +339,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Optional: if you add a logo or image file to your repo, uncomment this:
-# st.image("your_header_image.png", use_container_width=True)
-
 st.markdown(
     """
     <div class="note-box">
@@ -461,26 +472,40 @@ st.markdown('<div class="section-title">Filtered Exploration</div>', unsafe_allo
 if filtered.empty:
     st.warning("No data available for this filter combination. Try changing School Type, Complex Area, Subgroup, or Year Range.")
 else:
+    school_order = [s for s in school_types if s != "All"]
+
     schooltype_df = (
         filtered.groupby("School Type", as_index=False)[metric]
         .mean()
-        .sort_values(metric, ascending=False)
     )
 
-    if schooltype_df.empty:
+    schooltype_df = (
+        pd.DataFrame({"School Type": school_order})
+        .merge(schooltype_df, on="School Type", how="left")
+    )
+
+    if schooltype_df[metric].notna().sum() == 0:
         fig_schooltype = empty_figure("No school type data available for this filter combination.")
     else:
         fig_schooltype = px.bar(
             schooltype_df,
             x="School Type",
             y=metric,
-            color="School Type",
-            title=f"{metric_display_name} by School Type"
+            title=f"{metric_display_name} by School Type",
+            category_orders={"School Type": school_order},
+            color_discrete_sequence=[TITLE_COLOR]
         )
         fig_schooltype = apply_chart_theme(fig_schooltype)
         fig_schooltype.update_layout(showlegend=False)
 
     st.plotly_chart(fig_schooltype, use_container_width=True)
+
+    missing_school_types = schooltype_df.loc[schooltype_df[metric].isna(), "School Type"].tolist()
+    if missing_school_types:
+        st.caption(
+            "No matching data for these school types under the current filters: "
+            + ", ".join(missing_school_types)
+        )
 
     area_df = (
         filtered.groupby("Complex Area", as_index=False)[metric]
@@ -539,12 +564,3 @@ else:
             fig_scatter = apply_chart_theme(fig_scatter)
 
     st.plotly_chart(fig_scatter, use_container_width=True)
-
-st.markdown(
-    """
-    <div class="mini-note">
-        Styling inspired by your brochure’s dark blue background, bright cyan headings, and highlighted dashboard presentation layout.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
