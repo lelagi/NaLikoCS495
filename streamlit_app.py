@@ -25,7 +25,12 @@ for col in numeric_cols:
     if col in df.columns:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
-df["Title I"] = pd.to_numeric(df["Title I"], errors="coerce").fillna(0).astype(int)
+# Clean Title I column:
+# "Yes" = Title I
+# blank = Non-Title I
+df["Title I"] = df["Title I"].fillna("").astype(str).str.strip()
+df["Title I"] = df["Title I"].apply(lambda x: 1 if x.lower() == "yes" else 0)
+
 df["Title I Label"] = df["Title I"].map({1: "Title I", 0: "Non-Title I"})
 
 metric_options = {
