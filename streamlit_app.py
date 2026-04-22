@@ -63,11 +63,22 @@ def filter_df(data, years_selected, school_type, area, subgroup):
 
     return filtered
 
+def filter_year_only(data, years_selected):
+    filtered = data.copy()
+    filtered = filtered[
+        (filtered["Year"] >= years_selected[0]) &
+        (filtered["Year"] <= years_selected[1])
+    ]
+    return filtered
+
 def indicator_figure(title, value):
+    display_value = None if pd.isna(value) else round(value, 2)
+
     fig = go.Figure(
         go.Indicator(
             mode="number",
-            value=0 if pd.isna(value) else round(value, 2),
+            value=0 if display_value is None else display_value,
+            number={"valueformat": ".2f"},
             title={"text": title}
         )
     )
@@ -98,8 +109,11 @@ years_selected = st.sidebar.slider(
     value=(int(min(years)), int(max(years)))
 )
 
+# Filtered data for exploration charts
 filtered = filter_df(df, years_selected, school_type, area, subgroup)
-comparison = filtered.copy()
+
+# Comparison data for Title I vs Non-Title I story
+comparison = filter_year_only(df, years_selected)
 
 overall_avg = filtered[metric].mean()
 title_avg = comparison.loc[comparison["Title I"] == 1, metric].mean()
@@ -108,7 +122,7 @@ gap = non_title_avg - title_avg
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.plotly_chart(indicator_figure(f"Average {metric}", overall_avg), use_container_width=True)
+    st.plotly_chart(indicator_figure(f"Filtered Average {metric}", overall_avg), use_container_width=True)
 with col2:
     st.plotly_chart(indicator_figure("Title I Average", title_avg), use_container_width=True)
 with col3:
@@ -123,7 +137,7 @@ fig_trend = px.line(
     y=metric,
     color="Title I Label",
     markers=True,
-    title=f"{metric} Over Time"
+    title=f"{metric} Over Time: Title I vs Non-Title I"
 )
 st.plotly_chart(fig_trend, use_container_width=True)
 
