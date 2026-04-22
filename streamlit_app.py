@@ -39,34 +39,60 @@ st.markdown(
         color: {TEXT_MAIN} !important;
     }}
 
+    /* Dropdown box */
     .stSelectbox div[data-baseweb="select"] > div {{
         background-color: #FFFFFF !important;
-        color: #0B254A !important;
+        color: #000000 !important;
+        border-radius: 10px !important;
     }}
 
+    /* Selected text shown inside dropdown */
     .stSelectbox div[data-baseweb="select"] span {{
-        color: #0B254A !important;
+        color: #000000 !important;
+        opacity: 1 !important;
+    }}
+
+    .stSelectbox div[data-baseweb="select"] div {{
+        color: #000000 !important;
     }}
 
     .stSelectbox input {{
-        color: #0B254A !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+    }}
+
+    /* Dropdown menu options */
+    div[data-baseweb="popover"] {{
+        background-color: #FFFFFF !important;
     }}
 
     div[data-baseweb="popover"] * {{
-        color: #0B254A !important;
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+    }}
+
+    li[role="option"] {{
+        color: #000000 !important;
+        background-color: #FFFFFF !important;
+    }}
+
+    li[role="option"]:hover {{
+        background-color: #EAF4FF !important;
+        color: #000000 !important;
     }}
 
     .block-container {{
-        padding-top: 2rem;
-        padding-bottom: 2rem;
+        padding-top: 1.2rem;
+        padding-bottom: 1.2rem;
+        max-width: 95rem;
     }}
 
     .hero-title {{
-        font-size: 3rem;
+        font-size: 2.45rem;
         font-weight: 800;
         color: white;
         line-height: 1.0;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.25rem;
         text-transform: uppercase;
         letter-spacing: 1px;
     }}
@@ -76,79 +102,80 @@ st.markdown(
     }}
 
     .hero-subtitle {{
-        font-size: 1.25rem;
+        font-size: 1.05rem;
         color: {TEXT_MAIN};
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.25rem;
         font-weight: 600;
     }}
 
     .hero-caption {{
         color: {TEXT_MUTED};
-        font-size: 0.98rem;
-        margin-bottom: 1.2rem;
+        font-size: 0.92rem;
+        margin-bottom: 0.8rem;
     }}
 
     .section-title {{
         color: {TITLE_COLOR};
-        font-size: 1.65rem;
+        font-size: 1.45rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-top: 1.25rem;
-        margin-bottom: 0.55rem;
+        margin-top: 0.9rem;
+        margin-bottom: 0.4rem;
     }}
 
     .note-box {{
         background: rgba(46,184,255,0.09);
         border: 1px solid rgba(46,184,255,0.35);
-        border-radius: 14px;
-        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        padding: 0.7rem 0.9rem;
         color: {TEXT_MAIN};
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem;
+        font-size: 0.92rem;
     }}
 
     .mini-note {{
         color: {TEXT_MUTED};
-        font-size: 0.9rem;
-        margin-top: -0.15rem;
-        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        margin-top: -0.1rem;
+        margin-bottom: 0.7rem;
     }}
 
     .metric-card {{
         background: {PANEL_BG};
         border: 1px solid rgba(46,184,255,0.32);
         box-shadow: 0 0 0 1px rgba(46,184,255,0.08), 0 8px 24px rgba(0,0,0,0.22);
-        border-radius: 18px;
-        padding: 1rem 1rem 0.85rem 1rem;
-        min-height: 135px;
+        border-radius: 16px;
+        padding: 0.75rem 0.8rem 0.65rem 0.8rem;
+        min-height: 105px;
     }}
 
     .metric-label {{
         color: {TEXT_MUTED};
-        font-size: 0.95rem;
+        font-size: 0.82rem;
         font-weight: 700;
-        margin-bottom: 0.55rem;
+        margin-bottom: 0.4rem;
     }}
 
     .metric-value {{
         color: white;
-        font-size: 2.7rem;
+        font-size: 2.05rem;
         font-weight: 800;
         line-height: 1;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.15rem;
     }}
 
     .metric-foot {{
         color: {TEXT_MUTED};
-        font-size: 0.82rem;
-        margin-top: 0.35rem;
+        font-size: 0.74rem;
+        margin-top: 0.25rem;
     }}
 
     div[data-testid="stPlotlyChart"] {{
         background: {PANEL_BG};
         border: 1px solid rgba(46,184,255,0.28);
-        border-radius: 18px;
-        padding: 0.6rem 0.6rem 0.2rem 0.6rem;
+        border-radius: 16px;
+        padding: 0.4rem 0.45rem 0.15rem 0.45rem;
         box-shadow: 0 8px 24px rgba(0,0,0,0.22);
     }}
 
@@ -158,15 +185,15 @@ st.markdown(
     }}
 
     .stAlert {{
-        border-radius: 14px;
+        border-radius: 12px;
     }}
 
     hr {{
         border: none;
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(46,184,255,0.45), transparent);
-        margin-top: 1.2rem;
-        margin-bottom: 1.2rem;
+        margin-top: 0.9rem;
+        margin-bottom: 0.9rem;
     }}
     </style>
     """,
@@ -288,8 +315,8 @@ def empty_figure(message):
                 "font": {"size": 16, "color": TEXT_MUTED}
             }
         ],
-        height=420,
-        margin=dict(l=30, r=30, t=60, b=30),
+        height=360,
+        margin=dict(l=25, r=25, t=55, b=25),
     )
     return fig
 
@@ -300,10 +327,10 @@ def apply_chart_theme(fig):
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font=dict(color=TEXT_MAIN),
-        title_font=dict(size=20, color=TEXT_MAIN),
+        title_font=dict(size=18, color=TEXT_MAIN),
         legend_title_font=dict(color=TEXT_MUTED),
         legend_font=dict(color=TEXT_MAIN),
-        margin=dict(l=35, r=25, t=70, b=45),
+        margin=dict(l=30, r=20, t=60, b=40),
         xaxis=dict(
             gridcolor=GRID_COLOR,
             zerolinecolor=GRID_COLOR,
@@ -484,6 +511,10 @@ else:
         .merge(schooltype_df, on="School Type", how="left")
     )
 
+    schooltype_df["sort_val"] = schooltype_df[metric].fillna(-1)
+    schooltype_df = schooltype_df.sort_values("sort_val", ascending=False).drop(columns="sort_val")
+    ordered_school_types = schooltype_df["School Type"].tolist()
+
     if schooltype_df[metric].notna().sum() == 0:
         fig_schooltype = empty_figure("No school type data available for this filter combination.")
     else:
@@ -492,7 +523,7 @@ else:
             x="School Type",
             y=metric,
             title=f"{metric_display_name} by School Type",
-            category_orders={"School Type": school_order},
+            category_orders={"School Type": ordered_school_types},
             color_discrete_sequence=[TITLE_COLOR]
         )
         fig_schooltype = apply_chart_theme(fig_schooltype)
@@ -524,7 +555,7 @@ else:
             color_discrete_sequence=[TITLE_COLOR]
         )
         fig_area = apply_chart_theme(fig_area)
-        fig_area.update_xaxes(tickangle=35)
+        fig_area.update_xaxes(categoryorder="total descending", tickangle=35)
 
     st.plotly_chart(fig_area, use_container_width=True)
 
