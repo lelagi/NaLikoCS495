@@ -26,7 +26,7 @@ for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
 
 df["Title I"] = pd.to_numeric(df["Title I"], errors="coerce").fillna(0).astype(int)
-df["Title I Label"] = df["Title I"].map({1: "Title I", 0: "Non–Title I"})
+df["Title I Label"] = df["Title I"].map({1: "Title I", 0: "Non-Title I"})
 
 metric_options = {
     "Absenteeism": "Absenteeism (%)",
@@ -44,16 +44,13 @@ school_types = ["All"] + sorted(df["School Type"].dropna().astype(str).unique().
 areas = ["All"] + sorted(df["Complex Area"].dropna().astype(str).unique().tolist())
 subgroups = ["All"] + sorted(df["Subgroup Description"].dropna().astype(str).unique().tolist())
 
-def filter_df(data, years_selected, title_i, school_type, area, subgroup):
+def filter_df(data, years_selected, school_type, area, subgroup):
     filtered = data.copy()
 
     filtered = filtered[
         (filtered["Year"] >= years_selected[0]) &
         (filtered["Year"] <= years_selected[1])
     ]
-
-    if title_i != "All":
-        filtered = filtered[filtered["Title I"] == title_i]
 
     if school_type != "All":
         filtered = filtered[filtered["School Type"] == school_type]
@@ -91,12 +88,6 @@ metric = st.sidebar.selectbox(
     format_func=lambda x: [k for k, v in metric_options.items() if v == x][0]
 )
 
-title_i = st.sidebar.selectbox(
-    "Title I",
-    options=["All", 1, 0],
-    format_func=lambda x: "All" if x == "All" else ("Title I" if x == 1 else "Non–Title I")
-)
-
 school_type = st.sidebar.selectbox("School Type", school_types)
 area = st.sidebar.selectbox("Complex Area", areas)
 subgroup = st.sidebar.selectbox("Subgroup", subgroups)
@@ -107,8 +98,8 @@ years_selected = st.sidebar.slider(
     value=(int(min(years)), int(max(years)))
 )
 
-filtered = filter_df(df, years_selected, title_i, school_type, area, subgroup)
-comparison = filter_df(df, years_selected, "All", school_type, area, subgroup)
+filtered = filter_df(df, years_selected, school_type, area, subgroup)
+comparison = filtered.copy()
 
 overall_avg = filtered[metric].mean()
 title_avg = comparison.loc[comparison["Title I"] == 1, metric].mean()
@@ -121,7 +112,7 @@ with col1:
 with col2:
     st.plotly_chart(indicator_figure("Title I Average", title_avg), use_container_width=True)
 with col3:
-    st.plotly_chart(indicator_figure("Non–Title I Average", non_title_avg), use_container_width=True)
+    st.plotly_chart(indicator_figure("Non-Title I Average", non_title_avg), use_container_width=True)
 with col4:
     st.plotly_chart(indicator_figure("Gap (Non - Title I)", gap), use_container_width=True)
 
